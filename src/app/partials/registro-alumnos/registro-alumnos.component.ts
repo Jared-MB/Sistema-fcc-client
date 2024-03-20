@@ -2,14 +2,14 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlumnosService } from 'src/app/services/alumnos.service';
-declare var $:any;
+declare var $: any;
 
 @Component({
   selector: 'app-registro-alumnos',
   templateUrl: './registro-alumnos.component.html',
   styleUrls: ['./registro-alumnos.component.scss']
 })
-export class RegistroAlumnosComponent implements OnInit{
+export class RegistroAlumnosComponent implements OnInit {
   @Input() rol: string = "";
 
   //Para contraseñas
@@ -18,17 +18,17 @@ export class RegistroAlumnosComponent implements OnInit{
   public inputType_1: string = 'password';
   public inputType_2: string = 'password';
 
-  public alumno:any= {};
-  public errors:any={};
-  public editar:boolean = false;
+  public alumno: any = {};
+  public errors: any = {};
+  public editar: boolean = false;
   public idUser: Number = 0;
 
   constructor(
-    private location : Location,
+    private location: Location,
     private router: Router,
     public activatedRoute: ActivatedRoute,
     private alumnosService: AlumnosService
-  ){
+  ) {
 
   }
 
@@ -36,7 +36,7 @@ export class RegistroAlumnosComponent implements OnInit{
     this.alumno = this.alumnosService.esquemaAlumno();
     this.alumno.rol = this.rol;
     //El primer if valida si existe un parámetro en la URL
-    if(this.activatedRoute.snapshot.params['id'] != undefined){
+    if (this.activatedRoute.snapshot.params['id'] != undefined) {
       this.editar = true;
       //Asignamos a nuestra variable global el valor del ID que viene por la URL
       this.idUser = this.activatedRoute.snapshot.params['id'];
@@ -48,37 +48,35 @@ export class RegistroAlumnosComponent implements OnInit{
     console.log("Alumno: ", this.alumno);
   }
 
-  public regresar(){
+  public regresar() {
     this.location.back();
   }
 
   //Funciones para password
-  showPassword()
-  {
-    if(this.inputType_1 == 'password'){
+  showPassword() {
+    if (this.inputType_1 == 'password') {
       this.inputType_1 = 'text';
       this.hide_1 = true;
     }
-    else{
+    else {
       this.inputType_1 = 'password';
       this.hide_1 = false;
     }
   }
 
-  showPwdConfirmar()
-  {
-    if(this.inputType_2 == 'password'){
+  showPwdConfirmar() {
+    if (this.inputType_2 == 'password') {
       this.inputType_2 = 'text';
       this.hide_2 = true;
     }
-    else{
+    else {
       this.inputType_2 = 'password';
       this.hide_2 = false;
     }
   }
 
   //Función para detectar el cambio de fecha
-  public changeFecha(event:any){
+  public changeFecha(event: any) {
     console.log(event);
     console.log(event.value.toISOString());
 
@@ -86,18 +84,29 @@ export class RegistroAlumnosComponent implements OnInit{
     console.log("Fecha: ", this.alumno.fecha_nacimiento);
   }
 
-  public registrar(){
+  public registrar() {
     //Validar
     this.errors = [];
 
     this.errors = this.alumnosService.validarAlumno(this.alumno, this.editar);
-    if(!$.isEmptyObject(this.errors)){
+    if (!$.isEmptyObject(this.errors)) {
       return false;
     }
 
+    this.alumnosService.registrarAlumno(this.alumno).subscribe(
+      (response) => {
+        alert("Usuario registrado correctamente");
+        console.log("Usuario registrado: ", response);
+        this.router.navigate(["/"]);
+      }, (error) => {
+
+        alert("No se pudo registrar usuario");
+      }
+    )
+
   }
 
-  public actualizar(){
+  public actualizar() {
 
   }
 

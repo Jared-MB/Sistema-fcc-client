@@ -110,13 +110,35 @@ export class MaestrosService {
     return error;
   }
 
-  public registrarMaestro(data: Partial<Teacher>): Observable<any> {
-    return this.http.post<any>(`${environment.url_api}/teacher/`, data)
+  //Aquí van los servicios HTTP
+  //Servicio para registrar un nuevo usuario
+  public registrarMaestro(data: any): Observable<any> {
+    return this.http.post<any>(`${environment.url_api}/maestros/`, data, httpOptions);
   }
 
   public obtenerListaMaestros(): Observable<any> {
     var token = this.facadeService.getSessionToken();
     var headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
     return this.http.get<any>(`${environment.url_api}/lista-maestros/`, { headers: headers });
+  }
+
+  //Obtener un solo maestro dependiendo su ID
+  public getMaestroByID(idUser: Number) {
+    return this.http.get<any>(`${environment.url_api}/maestros/?id=${idUser}`, httpOptions);
+  }
+
+
+  //Servicio para actualizar un usuario
+  public editarMaestro(data: any): Observable<any> {
+    var token = this.facadeService.getSessionToken();
+    var headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
+    return this.http.put<any>(`${environment.url_api}/maestros-edit/`, data, { headers: headers });
+  }
+
+  //Eliminar Maestro
+  public eliminarMaestro(idUser: number): Observable<any> {
+    var token = this.facadeService.getSessionToken();
+    var headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
+    return this.http.delete<any>(`${environment.url_api}/maestros-edit/?id=${idUser}`, { headers: headers });
   }
 }

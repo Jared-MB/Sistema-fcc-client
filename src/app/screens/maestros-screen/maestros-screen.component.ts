@@ -11,23 +11,31 @@ import { Teacher } from 'src/types';
   templateUrl: './maestros-screen.component.html',
   styleUrls: ['./maestros-screen.component.scss']
 })
-export class MaestrosScreenComponent {
+export class MaestrosScreenComponent implements OnInit {
+
   public name_user: string = "";
   public rol: string = "";
   public token: string = "";
   public lista_maestros: any[] = [];
 
   //Para la tabla
-  displayedColumns: string[] = ['clave_profesor', 'nombre', 'email', 'fecha_nacimiento', 'edad', 'rfc', 'telefono', 'editar', 'eliminar'];
-  dataSource = new MatTableDataSource<Teacher>(this.lista_maestros as Teacher[]);
+  displayedColumns: string[] = ['id_trabajador', 'nombre', 'email', 'fecha_nacimiento', 'telefono', 'rfc', 'cubiculo', 'area_investigacion', 'editar', 'eliminar'];
+  dataSource = new MatTableDataSource<DatosUsuario>(this.lista_maestros as DatosUsuario[]);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+
+
   constructor(
     public facadeService: FacadeService,
-    private maestrosService: MaestrosService,
+    public maestrosService: MaestrosService,
     private router: Router,
-  ) { }
+    public dialog: MatDialog
+  ) {
+  }
 
   ngOnInit(): void {
     this.name_user = this.facadeService.getUserCompleteName();
@@ -36,11 +44,10 @@ export class MaestrosScreenComponent {
     //Obtengo el token del login
     this.token = this.facadeService.getSessionToken();
     console.log("Token: ", this.token);
-
     if (this.token == "") {
       this.router.navigate([""]);
     }
-
+    //Obtener maestros
     this.obtenerMaestros();
     //Para paginador
     this.initPaginator();
@@ -83,22 +90,52 @@ export class MaestrosScreenComponent {
             usuario.last_name = usuario.user.last_name;
             usuario.email = usuario.user.email;
           });
-          console.log("Otro user: ", this.lista_maestros);
+          console.log("Maestros: ", this.lista_maestros);
 
-          this.dataSource = new MatTableDataSource<Teacher>(this.lista_maestros as Teacher[]);
+          this.dataSource = new MatTableDataSource<DatosUsuario>(this.lista_maestros as DatosUsuario[]);
         }
       }, (error) => {
-        alert("No se pudo obtener la lista de usuarios");
+        alert("No se pudo obtener la lista de maestros");
       }
     );
   }
 
   //Funcion para editar
   public goEditar(idUser: number) {
-    this.router.navigate(["registro/" + idUser]);
+    this.router.navigate(["registro-usuarios/maestro/" + idUser]);
   }
 
   public delete(idUser: number) {
+    const dialogRef = this.dialog.open(EliminarUserModalComponent, {
+      data: { id: idUser, rol: 'maestro' }, //Se pasan valores a través del componente
+      height: '288px',
+      width: '328px',
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (result.isDelete) {
+        console.log("Maestro eliminado");
+        //Recargar página
+        window.location.reload();
+      } else {
+        alert("Maestro no eliminado ");
+        console.log("No se eliminó el maestro");
+      }
+    });
   }
 }
+
+//Esto va fuera de la llave que cierra la clase
+export interface DatosUsuario {
+  id: number,
+  id_trabajador: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  fecha_nacimiento: string,
+  telefono: string,
+  rfc: string,
+  cubiculo: string,
+  area_investigacion: number,
+}
+

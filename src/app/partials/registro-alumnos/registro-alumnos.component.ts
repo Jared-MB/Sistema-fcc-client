@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlumnosService } from 'src/app/services/alumnos.service';
+import { FacadeService } from 'src/app/services/facade.service';
 declare var $: any;
 
 @Component({
@@ -11,6 +12,7 @@ declare var $: any;
 })
 export class RegistroAlumnosComponent implements OnInit {
   @Input() rol: string = "";
+  @Input() datos_user: any = {};
 
   //Para contraseñas
   public hide_1: boolean = false;
@@ -22,12 +24,14 @@ export class RegistroAlumnosComponent implements OnInit {
   public errors: any = {};
   public editar: boolean = false;
   public idUser: Number = 0;
+  public token = "";
 
   constructor(
     private location: Location,
     private router: Router,
     public activatedRoute: ActivatedRoute,
-    private alumnosService: AlumnosService
+    private alumnosService: AlumnosService,
+    private facadeService: FacadeService
   ) {
 
   }
@@ -42,7 +46,12 @@ export class RegistroAlumnosComponent implements OnInit {
       this.idUser = this.activatedRoute.snapshot.params['id'];
       console.log("ID User: ", this.idUser);
       //Al iniciar la vista obtiene el usuario por su ID
-      //this.obtenerUserByID();
+      this.alumno = this.datos_user;
+    }
+    else {
+      this.alumno = this.alumnosService.esquemaAlumno();
+      this.alumno.rol = this.rol;
+      this.token = this.facadeService.getSessionToken();
     }
     //Imprimir datos en consola
     console.log("Alumno: ", this.alumno);
@@ -107,7 +116,22 @@ export class RegistroAlumnosComponent implements OnInit {
   }
 
   public actualizar() {
+    this.errors = [];
+    this.errors = this.alumnosService.validarAlumno(this.alumno, this.editar);
+    if (!$.isEmptyObject(this.errors)) {
+      return false;
+    }
+    console.log("Pasó la validación");
 
+    this.alumnosService.editarAlumno(this.alumno).subscribe(
+      (response) => {
+        alert("Alumno editado correctamente");
+        console.log("Alumno editado: ", response);
+        this.router.navigate(["home"]);
+      }, (error) => {
+        alert("No se pudo editar el alumno");
+      }
+    );
   }
 
 }

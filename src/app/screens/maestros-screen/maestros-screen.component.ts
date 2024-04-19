@@ -1,7 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { EliminarUserModalComponent } from 'src/app/modals/eliminar-user-modal/eliminar-user-modal.component';
 import { FacadeService } from 'src/app/services/facade.service';
 import { MaestrosService } from 'src/app/services/maestros.service';
 import { Teacher } from 'src/types';
@@ -19,7 +21,7 @@ export class MaestrosScreenComponent implements OnInit {
   public lista_maestros: any[] = [];
 
   //Para la tabla
-  displayedColumns: string[] = ['id_trabajador', 'nombre', 'email', 'fecha_nacimiento', 'telefono', 'rfc', 'cubiculo', 'area_investigacion', 'editar', 'eliminar'];
+  displayedColumns: string[] = ['clave_profesor', 'nombre', 'email', 'fecha_nacimiento', 'edad', 'rfc', 'telefono', 'editar', 'eliminar'];
   dataSource = new MatTableDataSource<DatosUsuario>(this.lista_maestros as DatosUsuario[]);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;

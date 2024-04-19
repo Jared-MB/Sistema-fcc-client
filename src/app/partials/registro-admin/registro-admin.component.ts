@@ -25,10 +25,7 @@ export class RegistroAdminComponent implements OnInit {
   public inputType_1: string = 'password';
   public inputType_2: string = 'password';
 
-  public admin: any = {};
   public token: string = "";
-  public errors: any = {};
-  public editar: boolean = false;
   public idUser: Number = 0;
 
   constructor(

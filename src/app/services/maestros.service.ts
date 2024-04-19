@@ -26,7 +26,7 @@ export class MaestrosService {
   public esquemaMaestro() {
     return {
       'rol': '',
-      'id_trabajador': '',
+      'clave_profesor': '',
       'first_name': '',
       'last_name': '',
       'email': '',
@@ -37,7 +37,7 @@ export class MaestrosService {
       'rfc': '',
       'cubiculo': '',
       'area_investigacion': '',
-      'materias_json': []
+      'materias': []
     }
   }
 
@@ -46,8 +46,8 @@ export class MaestrosService {
     console.log("Validando maestro... ", data);
     let error: any = [];
 
-    if (!this.validatorService.required(data["id_trabajador"])) {
-      error["id_trabajador"] = this.errorService.required;
+    if (!this.validatorService.required(data["clave_profesor"])) {
+      error["clave_profesor"] = this.errorService.required;
     }
 
     if (!this.validatorService.required(data["first_name"])) {
@@ -102,7 +102,7 @@ export class MaestrosService {
       error["area_investigacion"] = this.errorService.required;
     }
 
-    if (data["materias_json"].length == 0) {
+    if (data["materias_json"]?.length == 0) {
       error["materias_json"] = "Al menos debes elegir una materia";
       //alert("Debes seleccionar materias para poder registrarte.");
     }
@@ -113,7 +113,14 @@ export class MaestrosService {
   //Aquí van los servicios HTTP
   //Servicio para registrar un nuevo usuario
   public registrarMaestro(data: any): Observable<any> {
-    return this.http.post<any>(`${environment.url_api}/maestros/`, data, httpOptions);
+    const edad = new Date().getFullYear() - Number(data.fecha_nacimiento.split('-')[0]);
+
+    const teacher = {
+      ...data,
+      edad
+    }
+
+    return this.http.post<any>(`${environment.url_api}/teacher/`, teacher)
   }
 
   public obtenerListaMaestros(): Observable<any> {
@@ -124,15 +131,26 @@ export class MaestrosService {
 
   //Obtener un solo maestro dependiendo su ID
   public getMaestroByID(idUser: Number) {
-    return this.http.get<any>(`${environment.url_api}/maestros/?id=${idUser}`, httpOptions);
+    return this.http.get<any>(`${environment.url_api}/teacher/?id=${idUser}`, httpOptions);
   }
 
 
   //Servicio para actualizar un usuario
   public editarMaestro(data: any): Observable<any> {
+    console.log('Editando')
     var token = this.facadeService.getSessionToken();
     var headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
-    return this.http.put<any>(`${environment.url_api}/maestros-edit/`, data, { headers: headers });
+    const edad = new Date().getFullYear() - Number(data.fecha_nacimiento.split('-')[0]);
+
+
+    const teacher = {
+      ...data,
+      edad
+    }
+
+    console.log('Teacher', teacher)
+
+    return this.http.put<any>(`${environment.url_api}/maestros-edit/`, teacher, { headers: headers });
   }
 
   //Eliminar Maestro

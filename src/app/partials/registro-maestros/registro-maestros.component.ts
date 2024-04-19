@@ -82,27 +82,27 @@ export class RegistroMaestrosComponent implements OnInit {
     this.location.back();
   }
 
-  public registrar() {
-    //Validar
-    this.errors = [];
+  // public registrar() {
+  //   //Validar
+  //   this.errors = [];
 
-    this.errors = this.maestrosService.validarMaestro(this.maestro, this.editar);
-    if (!$.isEmptyObject(this.errors)) {
-      return false;
-    }
+  //   this.errors = this.maestrosService.validarMaestro(this.maestro, this.editar);
+  //   if (!$.isEmptyObject(this.errors)) {
+  //     return false;
+  //   }
 
-    this.maestrosService.registrarMaestro(this.maestro).subscribe(
-      (response) => {
-        alert("Usuario registrado correctamente");
-        console.log("Usuario registrado: ", response);
-        this.router.navigate(["/"]);
-      }, (error) => {
-        console.log("Error: ", error);
-        alert("No se pudo registrar usuario");
-      }
-    )
+  //   this.maestrosService.registrarMaestro(this.maestro).subscribe(
+  //     (response) => {
+  //       alert("Usuario registrado correctamente");
+  //       console.log("Usuario registrado: ", response);
+  //       this.router.navigate(["/"]);
+  //     }, (error) => {
+  //       console.log("Error: ", error);
+  //       alert("No se pudo registrar usuario");
+  //     }
+  //   )
 
-  }
+  // }
 
   //Funciones para password
   showPassword() {
@@ -173,9 +173,10 @@ export class RegistroMaestrosComponent implements OnInit {
 
     this.errors = this.maestrosService.validarMaestro(this.maestro, this.editar);
     if (!$.isEmptyObject(this.errors)) {
+      console.log("Errores: ", this.errors);
       return false;
     }
-    console.log("Pasó la validación");
+    console.log("Pasó la validación", this.maestro);
 
     this.maestrosService.editarMaestro(this.maestro).subscribe(
       (response) => {
@@ -192,12 +193,12 @@ export class RegistroMaestrosComponent implements OnInit {
   public checkboxChange(event: any) {
     //console.log("Evento: ", event);
     if (event.checked) {
-      this.maestro.materias_json.push(event.source.value)
+      this.maestro.materias.push(event.source.value)
     } else {
       console.log(event.source.value);
-      this.maestro.materias_json.forEach((materia, i) => {
+      this.maestro.materias.forEach((materia, i) => {
         if (materia == event.source.value) {
-          this.maestro.materias_json.splice(i, 1);
+          this.maestro.materias.splice(i, 1);
         }
       });
     }
@@ -205,8 +206,8 @@ export class RegistroMaestrosComponent implements OnInit {
   }
 
   public revisarSeleccion(nombre: string) {
-    if (this.maestro.materias_json) {
-      var busqueda = this.maestro.materias_json.find((element) => element == nombre);
+    if (this.maestro.materias) {
+      var busqueda = this.maestro.materias.find((element) => element == nombre);
       if (busqueda != undefined) {
         return true;
       } else {

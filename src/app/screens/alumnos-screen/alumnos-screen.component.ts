@@ -12,11 +12,11 @@ import { FacadeService } from 'src/app/services/facade.service';
   templateUrl: './alumnos-screen.component.html',
   styleUrls: ['./alumnos-screen.component.scss']
 })
-export class AlumnosScreenComponent implements OnInit{
+export class AlumnosScreenComponent implements OnInit {
 
-  public name_user:string = "";
-  public rol:string = "";
-  public token : string = "";
+  public name_user: string = "";
+  public rol: string = "";
+  public token: string = "";
   public lista_alumnos: any[] = [];
 
   //Para la tabla
@@ -27,10 +27,10 @@ export class AlumnosScreenComponent implements OnInit{
 
   constructor(
     public facadeService: FacadeService,
-    private alumnosService:AlumnosService,
+    private alumnosService: AlumnosService,
     private router: Router,
     public dialog: MatDialog
-  ){}
+  ) { }
 
   ngOnInit(): void {
     this.name_user = this.facadeService.getUserCompleteName();
@@ -40,7 +40,7 @@ export class AlumnosScreenComponent implements OnInit{
     this.token = this.facadeService.getSessionToken();
     console.log("Token: ", this.token);
 
-    if(this.token == ""){
+    if (this.token == "") {
       this.router.navigate([""]);
     }
 
@@ -50,7 +50,7 @@ export class AlumnosScreenComponent implements OnInit{
   }
 
   //Para paginación
-  public initPaginator(){
+  public initPaginator() {
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
       //console.log("Paginator: ", this.dataSourceIngresos.paginator);
@@ -69,17 +69,17 @@ export class AlumnosScreenComponent implements OnInit{
       this.paginator._intl.lastPageLabel = 'Última página';
       this.paginator._intl.previousPageLabel = 'Página anterior';
       this.paginator._intl.nextPageLabel = 'Página siguiente';
-    },500);
+    }, 500);
     //this.dataSourceIngresos.paginator = this.paginator;
   }
 
   //Obtener alumnos
-  public obtenerAlumnos(){
+  public obtenerAlumnos() {
     this.alumnosService.obtenerListaAlumnos().subscribe(
-      (response)=>{
+      (response) => {
         this.lista_alumnos = response;
         console.log("Lista users: ", this.lista_alumnos);
-        if(this.lista_alumnos.length > 0){
+        if (this.lista_alumnos.length > 0) {
           //Agregar datos del nombre e email
           this.lista_alumnos.forEach(usuario => {
             usuario.first_name = usuario.user.first_name;
@@ -90,30 +90,30 @@ export class AlumnosScreenComponent implements OnInit{
 
           this.dataSource = new MatTableDataSource<DatosUsuario>(this.lista_alumnos as DatosUsuario[]);
         }
-      }, (error)=>{
+      }, (error) => {
         alert("No se pudo obtener la lista de usuarios");
       }
     );
   }
 
   //Funcion para editar
-  public goEditar(idUser: number){
-    this.router.navigate(["registro/"+idUser]);
+  public goEditar(idUser: number) {
+    this.router.navigate(["registro-usuarios/alumno/" + idUser]);
   }
 
-  public delete(idUser: number){
-    const dialogRef = this.dialog.open(EliminarUserModalComponent,{
-      data: {id: idUser, rol: 'alumno'}, //Se pasan valores a través del componente
+  public delete(idUser: number) {
+    const dialogRef = this.dialog.open(EliminarUserModalComponent, {
+      data: { id: idUser, rol: 'alumno' }, //Se pasan valores a través del componente
       height: '288px',
       width: '328px',
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result.isDelete){
+      if (result.isDelete) {
         console.log("Alumno eliminado");
         //Recargar página
         window.location.reload();
-      }else{
+      } else {
         alert("Alumno no eliminado ");
         console.log("No se eliminó el alumno");
       }

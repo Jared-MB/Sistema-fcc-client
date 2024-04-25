@@ -10,17 +10,17 @@ import { FacadeService } from 'src/app/services/facade.service';
   templateUrl: './admin-screen.component.html',
   styleUrls: ['./admin-screen.component.scss']
 })
-export class AdminScreenComponent implements OnInit{
+export class AdminScreenComponent implements OnInit {
 
-  public name_user:string = "";
-  public lista_admins:any[]= [];
+  public name_user: string = "";
+  public lista_admins: any[] = [];
 
   constructor(
     public facadeService: FacadeService,
     private administradoresService: AdministradoresService,
     private router: Router,
     public dialog: MatDialog
-  ){}
+  ) { }
 
   ngOnInit(): void {
     this.name_user = this.facadeService.getUserCompleteName();
@@ -29,37 +29,35 @@ export class AdminScreenComponent implements OnInit{
   }
 
   //Obtener lista de usuarios
-  public obtenerAdmins(){
+  public obtenerAdmins() {
     this.administradoresService.obtenerListaAdmins().subscribe(
-      (response)=>{
+      (response) => {
         this.lista_admins = response;
         console.log("Lista users: ", this.lista_admins);
-      }, (error)=>{
+      }, (error) => {
         alert("No se pudo obtener la lista de admins");
       }
     );
   }
 
   //Funcion para editar
-  public goEditar(idUser: number){
-    this.router.navigate(["registro-usuarios/administrador/"+idUser]);
+  public goEditar(idUser: number) {
+    this.router.navigate(["registro-usuarios/administrador/" + idUser]);
   }
 
-  public delete(idUser: number){
-    const dialogRef = this.dialog.open(EliminarUserModalComponent,{
-      data: {id: idUser, rol: 'administrador'}, //Se pasan valores a través del componente
+  public delete(idUser: number) {
+    const dialogRef = this.dialog.open(EliminarUserModalComponent, {
+      data: { id: idUser, rol: 'administrador' }, //Se pasan valores a través del componente
       height: '288px',
       width: '328px',
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result.isDelete){
-        console.log("Admin eliminado");
+      if (result.isDelete) {
         //Recargar página
         window.location.reload();
-      }else{
+      } else {
         alert("Administrador no eliminado ");
-        console.log("No se eliminó el admin");
       }
     });
 

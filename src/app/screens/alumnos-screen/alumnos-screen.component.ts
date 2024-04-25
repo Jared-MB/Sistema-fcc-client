@@ -110,12 +110,10 @@ export class AlumnosScreenComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result.isDelete) {
-        console.log("Alumno eliminado");
         //Recargar página
         window.location.reload();
       } else {
         alert("Alumno no eliminado ");
-        console.log("No se eliminó el alumno");
       }
     });
   }

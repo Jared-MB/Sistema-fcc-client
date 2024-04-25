@@ -59,7 +59,6 @@ export class MaestrosScreenComponent implements OnInit {
   public initPaginator() {
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
-      //console.log("Paginator: ", this.dataSourceIngresos.paginator);
       //Modificar etiquetas del paginador a español
       this.paginator._intl.itemsPerPageLabel = 'Registros por página';
       this.paginator._intl.getRangeLabel = (page: number, pageSize: number, length: number) => {
@@ -96,7 +95,7 @@ export class MaestrosScreenComponent implements OnInit {
 
           this.dataSource = new MatTableDataSource<DatosUsuario>(this.lista_maestros as DatosUsuario[]);
         }
-      }, (error) => {
+      }, (_error) => {
         alert("No se pudo obtener la lista de maestros");
       }
     );
@@ -116,12 +115,10 @@ export class MaestrosScreenComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result.isDelete) {
-        console.log("Maestro eliminado");
         //Recargar página
         window.location.reload();
       } else {
         alert("Maestro no eliminado ");
-        console.log("No se eliminó el maestro");
       }
     });
   }

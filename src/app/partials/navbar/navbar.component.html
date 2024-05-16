@@ -1,12 +1,13 @@
 <div class="wrapper">
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <ng-container *ngIf="tipo!='registro-usuarios'; else registraUsers">
+          <ng-container *ngIf="tipo!='registro-usuarios' && tipo !== 'registro-materias' ; else registraUsers">
             <li class="nav-item">
               <a class="nav-link active" id="principal" aria-current="page" (click)="clickNavLink('home')">Inicio</a>
             </li>
@@ -17,25 +18,31 @@
               <a class="nav-link" id="maestro" (click)="clickNavLink('maestros')">Maestros</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link">Lista de materias</a>
+              <a class="nav-link" id="materias" (click)="clickNavLink('materias')">Lista de materias</a>
             </li>
             <li class="nav-item" *ngIf="rol=='administrador'">
               <a class="nav-link" id="graficas" (click)="clickNavLink('graficas')">Gráficas</a>
             </li>
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
                 Registrar
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" (click)="goRegistro()" *ngIf="rol!='alumno'">Alumnos</a></li>
-                <li><a class="dropdown-item" (click)="goRegistro()" *ngIf="rol!='maestro' && rol!='alumno'">Maestros</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Materias</a></li>
+                <li><a class="dropdown-item" (click)="goRegistro()" *ngIf="rol!='maestro' && rol!='alumno'">Maestros</a>
+                </li>
+                <li *ngIf="rol === 'administrador'">
+                  <hr class="dropdown-divider">
+                </li>
+                <li *ngIf="rol === 'administrador'"><a class="dropdown-item" (click)="goRegisterMaterias()">Materias</a>
+                </li>
               </ul>
             </li>
           </ng-container>
           <ng-template #registraUsers>
-            <label class="navbar-brand" href="#">Registro de usuarios del sistema</label>
+            <label class="navbar-brand" href="#">Registro de {{tipo === 'registro-materias' ? 'materias' : 'usuarios'}}
+              del sistema</label>
           </ng-template>
         </ul>
         <form class="d-flex">
@@ -45,7 +52,8 @@
             </button>
             <ul class="dropdown-menu">
               <li *ngIf="token != ''"><a class="dropdown-item" (click)="logout()">Cerrar Sesión</a></li>
-              <li *ngIf="tipo=='registro-usuarios' && token == ''"><a class="dropdown-item" href="#">Iniciar Sesión</a></li>
+              <li *ngIf="tipo=='registro-usuarios' && token == ''"><a class="dropdown-item" href="#">Iniciar Sesión</a>
+              </li>
             </ul>
           </div>
         </form>

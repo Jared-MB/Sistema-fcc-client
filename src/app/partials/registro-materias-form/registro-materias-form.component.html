@@ -1,0 +1,76 @@
+<div class="form-container">
+    <div>
+        <mat-form-field class="mat-input" appearance="outline">
+            <mat-label>NRC</mat-label>
+            <input type="number" matInput [(ngModel)]="materia.nrc" name="id"
+                placeholder="Escribe el NRC de la materia">
+        </mat-form-field>
+        <small *ngIf="errors.nrc">{{errors.nrc}}</small>
+    </div>
+    <div>
+        <mat-form-field class="mat-input" appearance="outline">
+            <mat-label>Nombre de la materia</mat-label>
+            <input matInput [(ngModel)]="materia.nombre" name="id" placeholder="Escribe el nombre de la materia">
+        </mat-form-field>
+        <small *ngIf="errors.nombre">{{errors.nombre}}</small>
+    </div>
+    <div>
+        <mat-form-field class="mat-input" appearance="outline">
+            <mat-label>Sección</mat-label>
+            <input type="number" matInput [(ngModel)]="materia.seccion" name="id"
+                placeholder="Escribe la sección de la materia">
+        </mat-form-field>
+        <small *ngIf="errors.seccion">{{errors.seccion}}</small>
+    </div>
+    <div>
+        <mat-form-field class="mat-input" appearance="outline">
+            <mat-label>Salón</mat-label>
+            <input matInput [(ngModel)]="materia.salon" name="id" placeholder="Escribe el salón de la materia">
+        </mat-form-field>
+        <small *ngIf="errors.salon">{{errors.salon}}</small>
+    </div>
+    <section class="schedule">
+        <article [formGroup]="dias">
+            <div>
+                <mat-label>Días:</mat-label>
+                <p><mat-checkbox formControlName="lunes">Lunes</mat-checkbox></p>
+                <p><mat-checkbox formControlName="martes">Martes</mat-checkbox></p>
+                <p><mat-checkbox formControlName="miercoles">Miércoles</mat-checkbox></p>
+                <p><mat-checkbox formControlName="jueves">Jueves</mat-checkbox></p>
+                <p><mat-checkbox formControlName="viernes">Viernes</mat-checkbox></p>
+                <small *ngIf="errors.dias">{{errors.dias}}</small>
+            </div>
+        </article>
+        <article class="hours">
+            <mat-label>Horario:</mat-label>
+            <div class="hours-inputs-container">
+                <div>
+                    <h5>Inicio</h5>
+                    <input type="time" [(ngModel)]="materia.horario.startAt">
+                    <small *ngIf="errors.horario">{{errors.horario[0]}}</small>
+                </div>
+                <div>
+                    <h5>Fin</h5>
+                    <input type="time" [(ngModel)]="materia.horario.endAt">
+                    <small *ngIf="errors.horario">{{errors.horario[1]}}</small>
+                </div>
+            </div>
+        </article>
+    </section>
+    <div>
+        <mat-form-field>
+            <mat-label>Programa Educativo</mat-label>
+            <mat-select [(ngModel)]="materia.programaEducativo">
+                <mat-option *ngFor="let programa of programasEducativos" [value]="programa">
+                    {{programa}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <small *ngIf="errors.programaEducativo">{{errors.programaEducativo}}</small>
+    </div>
+    <div class="submit-button-container">
+        <button mat-raised-button (click)="back()">Cancelar</button>
+        <button mat-raised-button color="primary" (click)="handleSubmit()">{{this.edit ? 'Editar': 'Registrar'}}
+            materia</button>
+    </div>
+</div>

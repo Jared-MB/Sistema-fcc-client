@@ -3,6 +3,7 @@ import { Location } from '@angular/common';
 import { MaestrosService } from 'src/app/services/maestros.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FacadeService } from 'src/app/services/facade.service';
+import { MateriaService } from 'src/app/services/materia.service';
 declare var $: any;
 
 @Component({
@@ -38,24 +39,25 @@ export class RegistroMaestrosComponent implements OnInit {
     { value: '5', viewValue: 'Matemáticas' },
   ];
 
-  public materias: any[] = [
-    { value: '1', nombre: 'Aplicaciones Web' },
-    { value: '2', nombre: 'Programación 1' },
-    { value: '3', nombre: 'Bases de datos' },
-    { value: '4', nombre: 'Tecnologías Web' },
-    { value: '5', nombre: 'Minería de datos' },
-    { value: '6', nombre: 'Desarrollo móvil' },
-    { value: '7', nombre: 'Estructuras de datos' },
-    { value: '8', nombre: 'Administración de redes' },
-    { value: '9', nombre: 'Ingeniería de Software' },
-    { value: '10', nombre: 'Administración de S.O.' },
+  public materias: { value: string, nombre: string }[] = [
+    // { value: '1', nombre: 'Aplicaciones Web' },
+    // { value: '2', nombre: 'Programación 1' },
+    // { value: '3', nombre: 'Bases de datos' },
+    // { value: '4', nombre: 'Tecnologías Web' },
+    // { value: '5', nombre: 'Minería de datos' },
+    // { value: '6', nombre: 'Desarrollo móvil' },
+    // { value: '7', nombre: 'Estructuras de datos' },
+    // { value: '8', nombre: 'Administración de redes' },
+    // { value: '9', nombre: 'Ingeniería de Software' },
+    // { value: '10', nombre: 'Administración de S.O.' },
   ];
   constructor(
     private location: Location,
     private maestrosService: MaestrosService,
     private router: Router,
     public activatedRoute: ActivatedRoute,
-    private facadeService: FacadeService
+    private facadeService: FacadeService,
+    private materiaService: MateriaService
   ) {
 
   }
@@ -76,6 +78,7 @@ export class RegistroMaestrosComponent implements OnInit {
     }
     //Imprimir datos en consola
     console.log("Maestro: ", this.maestro);
+    this.selectMaterias()
   }
 
   public regresar() {
@@ -103,6 +106,18 @@ export class RegistroMaestrosComponent implements OnInit {
   //   )
 
   // }
+
+  public selectMaterias() {
+    this.materiaService.selectMaterias().subscribe({
+      next: (materias) => {
+        console.log(Object.values(materias));
+        this.materias = Object.values(materias).map((materia, index) => ({
+          value: String(index + 1),
+          nombre: materia.nombre
+        }));
+      }
+    })
+  }
 
   //Funciones para password
   showPassword() {
